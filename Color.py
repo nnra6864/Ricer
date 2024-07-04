@@ -11,25 +11,25 @@ class Color:
         self.parse_color(color)
 
     @staticmethod
-    def HEXAtoRGBA(hexa):
+    def hexa_to_rgba(hexa):
         hexa = hexa.lstrip('#')
         
         if len(hexa) not in (6, 8) or not all(c in '0123456789ABCDEFabcdef' for c in hexa):
-            raise ValueError("Invalid HEXA value")
+            raise ValueError(f"Invalid HEXA value: {hexa}")
         if len(hexa) == 6:
             hexa += "FF"
         
         return tuple(int(hexa[i:i+2], 16) for i in (0, 2, 4, 6))
 
     @staticmethod
-    def RGBAtoHEXA(rgba):
+    def rgba_to_hexa(rgba):
         if len(rgba) == 3:
             r, g, b = rgba
             a = 255
         elif len(rgba) == 4:
             r, g, b, a = rgba
         else:
-            raise ValueError("Invalid RGBA value")
+            raise ValueError(f"Invalid RGBA value: {rgba}")
         return f"{r:02X}{g:02X}{b:02X}{a:02X}"
 
     def parse_color(self, color):
@@ -38,7 +38,7 @@ class Color:
             color += "FF"
         if re.match(r'^([0-9a-fA-F]{8})$', color):
             self.hexa = color.upper()
-            self.r, self.g, self.b, self.a = Color.HEXAtoRGBA(color)
+            self.r, self.g, self.b, self.a = Color.hexa_to_rgba(color)
             self.r01, self.g01, self.b01, self.a01 = (x / 255 for x in (self.r, self.g, self.b, self.a))
             self.rgba = (self.r, self.g, self.b, self.a)
             self.rgba01 = (self.r01, self.g01, self.b01, self.a01)
@@ -57,7 +57,7 @@ class Color:
             self.rgba01 = tuple(float(val) if '.' in val else int(val) / 255.0 for val in vals)
             self.r, self.g, self.b, self.a = self.rgba
             self.r01, self.g01, self.b01, self.a01 = self.rgba01
-            self.hexa = Color.RGBAtoHEXA(self.rgba)
+            self.hexa = Color.rgba_to_hexa(self.rgba)
             return
-        raise ValueError(f"Invalid color format: {color}")
+        raise ValueError(f"Invalid color format: {color} for {self.name}")
 
