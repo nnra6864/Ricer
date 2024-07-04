@@ -1,5 +1,5 @@
 from Color import Color
-import os, toml
+import os, toml, shutil
 
 class File:
     def __init__(self, name, path, format):
@@ -26,6 +26,13 @@ files = []
 def load_config():
     global format, colors, files
     cfg_path = os.path.expanduser("~/.config/ColorRicer.toml")
+
+    if not os.path.exists(cfg_path):
+        template = os.path.join(os.path.dirname(__file__), "ColorRicer.toml")
+        if not os.path.exists(template):
+            raise FileNotFoundError("ColorRicer.toml is missing from the script directory, get the new one here: https://github.com/nnra6864/ColorRicer/blob/master/ColorRicer.toml")
+        shutil.copy(template, cfg_path)
+
     with open(cfg_path, 'r') as cfg:
         config = toml.load(cfg)
 
@@ -56,7 +63,7 @@ def load_config():
 
 load_config()
 
-print(f"Format: {format}")
+print(f"Default Format: {format}")
 
 for col in colors:
     print(f"Name: {col.name} | HEXA: {col.hexa} | RGBA: {col.rgba} | RGBA01: {col.rgba01}")
