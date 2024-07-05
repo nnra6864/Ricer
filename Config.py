@@ -1,4 +1,4 @@
-import os, toml, shutil, requests
+import os, toml, shutil, glob, requests
 from colorama import Fore
 
 class Config:
@@ -6,6 +6,7 @@ class Config:
 
     default_format = "{hex}"
     color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
+    file_log_format = "Name: {name}\nPath: {path}\nTarget Path: {target_path}\nFormat: {format}\n"
     rgba01_precision = 2
     colors = []
     files = []
@@ -40,7 +41,7 @@ class Config:
 
     @classmethod
     def load_config(cls):
-        #Has to be done here to avoid circular import
+        #Following modules have to be imported here to avoid circular imports
         from Color import Color
         from File import File
 
@@ -77,7 +78,7 @@ class Config:
         else:
             print(f"{Fore.GREEN}Found config at {Fore.BLUE}{cfg_path}")
         
-        print("\nLoading config")
+        print(f"{Fore.GREEN}\n\nLoading config\n")
 
         with open(cfg_path, 'r') as cfg:
             config = toml.load(cfg)
@@ -90,6 +91,10 @@ class Config:
             cls.color_log_format = config["color_log_format"]
             print(f"{Fore.GREEN}Loaded{Fore.RESET} color_log_format: {Fore.BLUE + cls.color_log_format}")
 
+        if "file_log_format" in config:
+            cls.file_log_format = config["file_log_format"]
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} file_log_format: {Fore.BLUE + cls.file_log_format}")
+
         if "rgba01_precision" in config:
             precision = str(config["rgba01_precision"])
             if not precision.isdigit():
@@ -97,7 +102,7 @@ class Config:
             cls.rgba01_precision = int(precision)
     
         if "Colors" in config:
-            print("\nLoading Colors")
+            print(f"{Fore.GREEN}\n\nLoading Colors\n")
             cfg_colors = config["Colors"]
             for name, color in cfg_colors.items():
                 col = Color(name, str(color))
@@ -105,14 +110,27 @@ class Config:
                 print(cls.color_log_format.format(name = f"{Fore.BLUE}{col.name}{Fore.RESET}", hexa = f"{Fore.BLUE}{col.hexa}{Fore.RESET}", rgba = f"{Fore.BLUE}{col.rgba}{Fore.RESET}", rgba01 = f"{Fore.BLUE}{col.rgba01}{Fore.RESET}"))
     
         if "Files" in config:
+            print(f"{Fore.GREEN}\n\nLoading Files\n")
             cfg_files = config["Files"]
-            for name, file in cfg_files.items():
-                if isinstance(file, str):
-                    cls.files.append(File(name, file, Config.default_format))
-    
-                elif isinstance(file, list) and len(file) in [1, 2]:
-                    form = cls.default_format if len(file) == 1 else file[1]
-                    cls.files.append(File(name, os.path.expanduser(file[0]), form))
-    
+            for name, file_data in cfg_files.items():
+                path = f"{os.path.join(files_dir, name)}*"
+                target_path = ""
+                format = Config.default_format
+
+                if isinstance(file_data, str):
+                    target_path = os.path.expanduser(file_data)
+
+                elif isinstance(file_data, list) and len(file_data) in [1, 2]:
+                    target_path = os.path.expanduser(file_data[0])
+                    if len(file_data) == 2: format = file_data[1]
                 else:
-                    raise ValueError(f"Invalid config file entry: {name} = {file}")
+                    raise ValueError(f"{Fore.RED}Invalid file entry: {Fore.BLUE}{name}{Fore.RED} = {Fore.BLUE}\"{file_data}\"{Fore.RESET}")
+                
+                files = glob.glob(path)
+                if len(files) == 0:
+                    raise ValueError(f"{Fore.RED}File with the name {Fore.BLUE}{name}{Fore.RED} doesn't exist in {Fore.BLUE}{files_dir}{Fore.RESET}")
+                path = files[0]
+                file = File(name, path, target_path, format)
+                cls.files.append(file)
+                print(cls.file_log_format.format(name = f"{Fore.BLUE}{file.name}{Fore.RESET}", path = f"{Fore.BLUE}{file.path}{Fore.RESET}", target_path = f"{Fore.BLUE}{file.target_path}{Fore.RESET}", format = f"{Fore.BLUE}{file.format}{Fore.RESET}"))
+

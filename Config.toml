@@ -7,4 +7,6 @@ Foreground = "#eceff4f0"
 01 = "rgb(0.132, .251332, 1, 0)"
 
 [Files]
-Hyprland = ["~/.config/hypr/testCR.conf", "rgba"]
+Hyprland = ["~/.config/hypr/Hyprland.conf", "rgba"]
+Hyprland2 = ["~/.config/hypr/Hyprland2.conf"]
+Hyprland3 = "~/.config/hypr/Hyprland2.conf"
