@@ -1,7 +1,0 @@
-format = "hex"
-
-[Colors]
-Background = "2e3440"
-
-[Files]
-Hyprland = ["~/.config/hypr/testCR.conf", "rgb"]

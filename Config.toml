@@ -1,0 +1,9 @@
+default_format = "{hex}"
+color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
+
+[Colors]
+background = "2e3440"
+Foreground = "#eceff4f0"
+
+[Files]
+Hyprland = ["~/.config/hypr/testCR.conf", "rgba"]
