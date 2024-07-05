@@ -1,13 +1,12 @@
 import os, toml, shutil, requests
 from colorama import Fore
-from Color import Color
-from File import File
 
 class Config:
     _initialized = False
 
     default_format = "{hex}"
     color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
+    rgba01_precision = 2
     colors = []
     files = []
 
@@ -26,7 +25,7 @@ class Config:
             os.makedirs(dir)
             print(f"{Fore.BLUE}{dir} {Fore.GREEN}created successfully")
         except OSError as err:
-            raise OSError(f"{Fore.RED}{err}")
+            raise OSError(f"{Fore.RED}{err}{Fore.RESET}")
 
     @staticmethod
     def download_file(url, save_path):
@@ -36,10 +35,15 @@ class Config:
                 f.write(response.content)
             print(f"{Fore.GREEN}Downloaded {Fore.BLUE}{url}{Fore.GREEN} to {Fore.BLUE}{save_path}")
         else:
-            raise Exception(f"{Fore.RED}Failed to download {Fore.BLUE}{url}{Fore.RED}: {response}")
+            raise Exception(f"{Fore.RED}Failed to download {Fore.BLUE}{url}{Fore.RED}: {response}{Fore.RESET}")
+
 
     @classmethod
     def load_config(cls):
+        #Has to be done here to avoid circular import
+        from Color import Color
+        from File import File
+
         cfg_dir = os.path.expanduser("~/.config/ColorRicer/")
         files_dir = cfg_dir+"Files/"
         cfg_path = cfg_dir + "Config.toml"
@@ -64,7 +68,7 @@ class Config:
                 try:
                     Config.download_file(raw_template_link, template)
                 except Exception as ex:
-                    raise Exception(f"{ex}\n{Fore.RESET}Try manually downloading the file and placing it in the same dir as ColorRicer\nTemplate: {Fore.BLUE}{template_link}{Fore.RESET}\nColorRicer: {Fore.BLUE}{cfg_path}") from None
+                    raise Exception(f"{ex}\nTry manually downloading the file and placing it in the same dir as ColorRicer\nTemplate: {Fore.BLUE}{template_link}{Fore.RESET}\nColorRicer: {Fore.BLUE}{cfg_path}") from None
 
             print(f"Copying {Fore.BLUE}{template}{Fore.RESET} to {Fore.BLUE}{cfg_path}")
             shutil.copy(template, cfg_path)
@@ -85,13 +89,20 @@ class Config:
         if "color_log_format" in config:
             cls.color_log_format = config["color_log_format"]
             print(f"{Fore.GREEN}Loaded{Fore.RESET} color_log_format: {Fore.BLUE + cls.color_log_format}")
+
+        if "rgba01_precision" in config:
+            precision = str(config["rgba01_precision"])
+            if not precision.isdigit():
+                raise ValueError(f"{Fore.RED}rgba01_precision must be a positive integer: {precision}")
+            cls.rgba01_precision = int(precision)
     
         if "Colors" in config:
             print("\nLoading Colors")
             cfg_colors = config["Colors"]
-            for name, col in cfg_colors.items():
-                cls.colors.append(Color(name, str(col)))
-                print(cls.color_log_format.format(name = col.name, hexa = col.hexa, rgba = col.rgba, rgba01 = col.rgba01))
+            for name, color in cfg_colors.items():
+                col = Color(name, str(color))
+                cls.colors.append(col)
+                print(cls.color_log_format.format(name = f"{Fore.BLUE}{col.name}{Fore.RESET}", hexa = f"{Fore.BLUE}{col.hexa}{Fore.RESET}", rgba = f"{Fore.BLUE}{col.rgba}{Fore.RESET}", rgba01 = f"{Fore.BLUE}{col.rgba01}{Fore.RESET}"))
     
         if "Files" in config:
             cfg_files = config["Files"]

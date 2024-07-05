@@ -1,4 +1,5 @@
 import re
+from Config import Config
 
 class Color:
     def __init__(self, name, color):
@@ -39,7 +40,7 @@ class Color:
         if re.match(r'^([0-9a-fA-F]{8})$', color):
             self.hexa = color.upper()
             self.r, self.g, self.b, self.a = Color.hexa_to_rgba(color)
-            self.r01, self.g01, self.b01, self.a01 = (x / 255 for x in (self.r, self.g, self.b, self.a))
+            self.r01, self.g01, self.b01, self.a01 = (round(x / 255, Config.rgba01_precision) for x in (self.r, self.g, self.b, self.a))
             self.rgba = (self.r, self.g, self.b, self.a)
             self.rgba01 = (self.r01, self.g01, self.b01, self.a01)
             return
@@ -54,7 +55,7 @@ class Color:
             if ln != 4:
                 raise ValueError(f"Invalid number of values in RGB format: {color}")
             self.rgba = tuple(int(float(val) * 255 if '.' in val else val) for val in vals)
-            self.rgba01 = tuple(float(val) if '.' in val else int(val) / 255.0 for val in vals)
+            self.rgba01 = tuple(round(float(val), Config.rgba01_precision) if '.' in val else round(int(val) / 255.0, Config.rgba01_precision) for val in vals)
             self.r, self.g, self.b, self.a = self.rgba
             self.r01, self.g01, self.b01, self.a01 = self.rgba01
             self.hexa = Color.rgba_to_hexa(self.rgba)
