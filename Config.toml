@@ -6,6 +6,10 @@ background = "2e3440"
 Foreground = "#eceff4f0"
 01 = "rgb(0.132, .251332, 1, 0)"
 
+[Values]
+expo_in = "\"bezier = expo, 0.87, 0, 0.13, 1\""
+expo_out = "\"bezier = expo, 0.87, 0, 0.13, 1\""
+
 [Files]
 Hyprland = ["~/.config/hypr/Hyprland.conf", "rgba"]
 Hyprland2 = ["~/.config/hypr/Hyprland2.conf"]

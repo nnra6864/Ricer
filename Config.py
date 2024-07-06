@@ -6,7 +6,6 @@ from File import File
 
 class Config:
     _initialized = False
-
     cfg_path = ""
     cfg_dir = ""
     files_path = ""
@@ -14,8 +13,9 @@ class Config:
     color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
     file_log_format = "Name: {name}\nPath: {path}\nTarget Path: {target_path}\nFormat: {format}\n"
     rgba01_precision = 2
-    colors = []
-    files = []
+    values = {}
+    colors = {}
+    files = {}
 
     @classmethod
     def init(cls, cfg_path):
@@ -23,8 +23,6 @@ class Config:
             return
         cls.load_config(cfg_path)
         cls._initialized = True
-
-
 
     @classmethod
     def load_config(cls, cfg_path):
@@ -52,7 +50,12 @@ class Config:
                 try:
                     Config.download_file(raw_template_link, template)
                 except Exception as ex:
-                    raise Exception(f"{ex}\nTry manually downloading the file and placing it in the same dir as ColorRicer\nTemplate: {Fore.BLUE}{template_link}{Fore.RESET}\nColorRicer: {Fore.BLUE}{cfg_path}") from None
+                    raise Exception(
+                        f"{ex}\n"
+                        f"Try manually downloading the file and placing it in the same dir as ColorRicer\n"
+                        f"Template: {Fore.BLUE}{template_link}{Fore.RESET}\n"
+                        f"ColorRicer: {Fore.BLUE}{cfg_path}"
+                    ) from None
 
             print(f"Copying {Fore.BLUE}{template}{Fore.RESET} to {Fore.BLUE}{cfg_path}")
             shutil.copy(template, cfg_path)
@@ -61,7 +64,7 @@ class Config:
         else:
             print(f"{Fore.GREEN}Found config at {Fore.BLUE}{cfg_path}")
         
-        print(f"{Fore.GREEN}\n\nLoading config\n")
+        print(f"{Fore.GREEN}\nLoading config")
 
         with open(cfg_path, 'r') as cfg:
             config = toml.load(cfg)
@@ -83,19 +86,25 @@ class Config:
             if not precision.isdigit():
                 raise ValueError(f"{Fore.RED}rgba01_precision must be a positive integer: {precision}")
             cls.rgba01_precision = int(precision)
-    
+        
+        if "Values" in config:
+            print(f"{Fore.GREEN}\nLoading Values")
+            cfg_values = config["Values"]
+            for name, data in cfg_values.items():
+                Config.values[name] = data
+                print(f"{name}: {Fore.BLUE + data}")
+
         if "Colors" in config:
-            print(f"{Fore.GREEN}\n\nLoading Colors\n")
+            print(f"{Fore.GREEN}\nLoading Colors")
             cfg_colors = config["Colors"]
             for name, data in cfg_colors.items():
-                Config.colors.append(Config.load_color(name, data))
-
+                Config.colors[name] = (Config.load_color(name, data))
     
         if "Files" in config:
-            print(f"{Fore.GREEN}\n\nLoading Files\n")
+            print(f"{Fore.GREEN}\nLoading Files")
             cfg_files = config["Files"]
-            for name, file_data in cfg_files.items():
-                Config.files.append(Config.load_file(name, file_data))
+            for name, data in cfg_files.items():
+                Config.files[name] = (Config.load_file(name, data))
     
     
     @staticmethod
@@ -142,13 +151,22 @@ class Config:
             target_path = os.path.expanduser(file_data[0])
             if len(file_data) == 2: format = file_data[1]
         else:
-            raise ValueError(f"{Fore.RED}Invalid file entry: {Fore.BLUE}{name}{Fore.RED} = {Fore.BLUE}\"{file_data}\"{Fore.RESET}")
+            raise ValueError(
+                f"{Fore.RED}Invalid file entry:\n",
+                f"{Fore.BLUE}{name}{Fore.RED} = {Fore.BLUE}\"{file_data}\"{Fore.RESET}"
+            )
         
         files = glob.glob(path)
         if len(files) == 0:
-            raise ValueError(f"{Fore.RED}File with the name {Fore.BLUE}{name}{Fore.RED} doesn't exist in {Fore.BLUE}{Config.files_dir}{Fore.RESET}")
+            raise ValueError(
+                f"{Fore.RED}File with the name {Fore.BLUE}{name}{Fore.RED} doesn't exist in:\n",
+                f"{Fore.BLUE}{Config.files_dir}{Fore.RESET}"
+            )
         if os.path.isdir(target_path):
-            raise ValueError(f"{Fore.RED}Target path must be a file, not a directory:\n{Fore.BLUE}{name} {Fore.RESET}= {Fore.BLUE}\"{file_data}\"{Fore.RESET}")
+            raise ValueError(
+                f"{Fore.RED}Target path must be a file, not a directory:\n",
+                f"{Fore.BLUE}{name} {Fore.RESET}= {Fore.BLUE}\"{file_data}\"{Fore.RESET}"
+            )
 
         path = files[0]
         file = File(name, path, target_path, format)
