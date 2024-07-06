@@ -39,8 +39,18 @@ class File:
         with open(self.path, 'r') as template:
             print(f"Reading {Fore.BLUE}{self.path}")
             content = template.read()
-        ricer_col_pattern = re.compile(r'\bricer\.col\.(\w+)(?:\.(\w+))?(?:\((.*?)\))?', re.DOTALL)
-        return ricer_col_pattern.sub(self.get_color, content)
+        ricer_col_pattern = re.compile(r'ricer\.col\.(\w+)(?:\.(\w+))?(?:\((.*?)\))?', re.DOTALL)
+        ricer_val_pattern = re.compile(r'ricer\.val\.(\w+)')
+        return ricer_col_pattern.sub(self.get_color, ricer_val_pattern.sub(self.get_value, content))
+    
+    def get_value(self, match) -> str:
+        from Config import Config
+        val = match.group(1)
+        if not val in Config.values:
+            raise KeyError(f"{Fore.RED}Value {Fore.BLUE}{val} {Fore.RED}is not defined in {Fore.BLUE}{Config.cfg_path}")
+        value = Config.values[val]
+        print(f"Replaced {Fore.BLUE}{match.group(0)} {Fore.RESET}with {Fore.BLUE}{value}")
+        return str(value)
 
     def get_color(self, match) -> str:
         from Config import Config

@@ -8,8 +8,8 @@ Foreground = "#eceff4f0"
 01 = "rgb(0.132, .251332, 1, 0)"
 
 [Values]
-expo_in = "\"bezier = expo, 0.87, 0, 0.13, 1\""
-expo_out = "\"bezier = expo, 0.87, 0, 0.13, 1\""
+test = 13.24
+test1 = "\nHAHAHAHA GG."
 two = 2
 
 [Files]
