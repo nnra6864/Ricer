@@ -71,15 +71,15 @@ class Config:
 
         if "default_format" in config:
             cls.default_format = config["default_format"]
-            print(f"{Fore.GREEN}Loaded{Fore.RESET} default format: {Fore.BLUE + cls.default_format}")
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} default format: {Fore.BLUE}{cls.default_format}")
     
         if "color_log_format" in config:
             cls.color_log_format = config["color_log_format"]
-            print(f"{Fore.GREEN}Loaded{Fore.RESET} color_log_format: {Fore.BLUE + cls.color_log_format}")
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} color_log_format: {Fore.BLUE}{cls.color_log_format}")
 
         if "file_log_format" in config:
             cls.file_log_format = config["file_log_format"]
-            print(f"{Fore.GREEN}Loaded{Fore.RESET} file_log_format: {Fore.BLUE + cls.file_log_format}")
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} file_log_format: {Fore.BLUE}{cls.file_log_format}")
 
         if "rgba01_precision" in config:
             precision = str(config["rgba01_precision"])
@@ -92,7 +92,7 @@ class Config:
             cfg_values = config["Values"]
             for name, data in cfg_values.items():
                 Config.values[name] = data
-                print(f"{name}: {Fore.BLUE + data}")
+                print(f"{name}: {Fore.BLUE}{data}")
 
         if "Colors" in config:
             print(f"{Fore.GREEN}\nLoading Colors")
