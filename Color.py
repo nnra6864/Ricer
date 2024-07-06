@@ -75,6 +75,7 @@ class Color:
                 vals.append("255")
             if ln != 4:
                 raise ValueError(f"Invalid number of values in RGB format: {color}")
+
             self.rgba = tuple(int(float(val) * 255 if '.' in val else val) for val in vals)
             self.rgba01 = tuple(round(float(val), Config.rgba01_precision) if '.' in val else round(int(val) / 255.0, Config.rgba01_precision) for val in vals)
             self.r, self.g, self.b, self.a = self.rgba

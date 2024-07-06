@@ -51,16 +51,16 @@ class Config:
             if not os.path.exists(template):
                 print(f"{Fore.YELLOW}Config template not found")
                 print(f"Downloading config template from GitHub")
-                template_link = "https://github.com/nnra6864/ColorRicer/blob/master/Config.toml"
-                raw_template_link = "https://raw.githubusercontent.com/nnra6864/ColorRicer/master/Config.toml"
+                template_link = "https://github.com/nnra6864/Ricer/blob/master/Config.toml"
+                raw_template_link = "https://raw.githubusercontent.com/nnra6864/Ricer/master/Config.toml"
                 try:
                     Config.download_file(raw_template_link, template)
                 except Exception as ex:
                     raise Exception(
                         f"{ex}\n"
-                        f"Try manually downloading the file and placing it in the same dir as ColorRicer\n"
+                        f"Try manually downloading the file and placing it in the same dir as Ricer\n"
                         f"Template: {Fore.BLUE}{template_link}{Fore.RESET}\n"
-                        f"ColorRicer: {Fore.BLUE}{cfg_path}"
+                        f"Ricer: {Fore.BLUE}{cfg_path}"
                     ) from None
 
             print(f"Copying {Fore.BLUE}{template}{Fore.RESET} to {Fore.BLUE}{cfg_path}")

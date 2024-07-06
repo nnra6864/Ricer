@@ -1,6 +1,5 @@
 import os, re
 from colorama import Fore
-from Color import Color
 
 class File:
     def __init__(self, name, path, target_path, format):
@@ -11,9 +10,9 @@ class File:
         self.dirname = os.path.dirname(self.path)
         self.target_dirname = os.path.dirname(self.target_path)
 
-    def write_file(self):
+    def rice(self):
         from Config import Config
-        print(f"{Fore.GREEN}\n\nUpdating {Fore.BLUE}{self.target_path}\n")
+        print(f"{Fore.GREEN}\nRicing {Fore.BLUE}{self.name}")
         
         if os.path.exists(self.target_path):
             print(f"{Fore.BLUE}{os.path.basename(self.target_path)} {Fore.YELLOW}already exists at {Fore.BLUE}{self.target_dirname}")
@@ -27,35 +26,29 @@ class File:
                     backup_count += 1
                     backup_path = f"{self.target_path}.backup{backup_count}"
                 os.rename(self.target_path, backup_path)
+                print(f"{Fore.GREEN}Backed up to {Fore.BLUE}{backup_path}")
 
         if not os.path.isdir(self.target_dirname):
             print(f"{Fore.BLUE}{self.target_dirname} {Fore.YELLOW}doesn't exist, creating now")
             Config.create_dir(self.target_dirname)
 
+        with open(self.target_path, 'w') as target_file:
+            target_file.write(self.rice_template())
 
-        with open(self.target_path, 'w') as target:
-            print()
-
-    def edit_template(self) -> str:
-        from Config import Config
-
+    def rice_template(self) -> str:
         with open(self.path, 'r') as template:
+            print(f"Reading {Fore.BLUE}{self.path}")
             content = template.read()
+        ricer_col_pattern = re.compile(r'\bricer\.col\.(\w+)(?:\.(\w+))?(?:\((.*?)\))?', re.DOTALL)
+        return ricer_col_pattern.sub(self.get_color, content)
 
-        ricer_col_pattern = re.compile(r'\bricer\.col\.\w+(?:\.\w+)*\(?.*?\)?\b')
-        matches = ricer_col_pattern.finditer(content)
-
-        for match in matches:
-            color = self.read_color(match)
-        return ""
-
-    def read_color(self, match) -> Color:
+    def get_color(self, match) -> str:
         from Config import Config
-
+        
         col_name = match.group(1)
         if not col_name in Config.colors:
             raise KeyError(f"{Fore.RED}Color {Fore.BLUE}{col_name} {Fore.RED}is not defined in {Fore.BLUE}{Config.cfg_path}")
-        col = Config.colors.get(col_name)
+        col = Config.colors[col_name]
 
         col_format = match.group(2)
         if col_format is None:
@@ -66,6 +59,13 @@ class File:
                 f"{Fore.BLUE}{self.path}"
             )
         form = col_format
-        
-        return col.format(form)
+
+        if form == "format":
+            col_format = match.group(3)
+            if not col_format is None:
+                form = col_format
+
+        color = col.format_color(form)
+        print(f"Replaced {Fore.BLUE}{match.group(0)} {Fore.RESET}with {Fore.BLUE}{color}")
+        return color
         

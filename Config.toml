@@ -1,4 +1,4 @@
-default_format = "{hex}"
+default_format = "hex"
 color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
 replace_files = true
 
@@ -13,6 +13,4 @@ expo_out = "\"bezier = expo, 0.87, 0, 0.13, 1\""
 two = 2
 
 [Files]
-Hyprland = ["~/.config/hypr/Hyprland.conf", "rgba"]
-Hyprland2 = ["~/.config/hypr/Hyprland2.conf"]
-Hyprland3 = "~/.config/hypr/Hyprland2.conf"
+Hyprland = ["~/.config/hypr/Hyprland.conf"]
