@@ -13,6 +13,7 @@ class Config:
     color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
     file_log_format = "Name: {name}\nPath: {path}\nTarget Path: {target_path}\nFormat: {format}\n"
     rgba01_precision = 2
+    replace_files = False
     values = {}
     colors = {}
     files = {}
@@ -70,23 +71,41 @@ class Config:
             config = toml.load(cfg)
 
         if "default_format" in config:
-            cls.default_format = config["default_format"]
+            default_format = config["default_format"]
+            if not isinstance(default_format, str):
+                raise ValueError(f"{Fore.RED}default_format must be a string: {default_format}{Fore.RESET}")
+            Config.default_format = default_format
             print(f"{Fore.GREEN}Loaded{Fore.RESET} default format: {Fore.BLUE}{cls.default_format}")
     
         if "color_log_format" in config:
-            cls.color_log_format = config["color_log_format"]
+            color_log_format = config["color_log_format"]
+            if not isinstance(color_log_format, str):
+                raise ValueError(f"{Fore.RED}color_log_format must be a string: {color_log_format}{Fore.RESET}")
+            Config.color_log_format = color_log_format
             print(f"{Fore.GREEN}Loaded{Fore.RESET} color_log_format: {Fore.BLUE}{cls.color_log_format}")
 
         if "file_log_format" in config:
-            cls.file_log_format = config["file_log_format"]
-            print(f"{Fore.GREEN}Loaded{Fore.RESET} file_log_format: {Fore.BLUE}{cls.file_log_format}")
+            file_log_format = config["file_log_format"]
+            if not isinstance(file_log_format, str):
+                raise ValueError(f"{Fore.RED}file_log_format must be a string: {file_log_format}{Fore.RESET}")
+            Config.file_log_format = file_log_format
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} file_log_format: {Fore.BLUE}{Config.file_log_format}")
 
         if "rgba01_precision" in config:
-            precision = str(config["rgba01_precision"])
-            if not precision.isdigit():
-                raise ValueError(f"{Fore.RED}rgba01_precision must be a positive integer: {precision}")
-            cls.rgba01_precision = int(precision)
+            rgba01_precision = config["rgba01_precision"]
+            if not isinstance(rgba01_precision, int) and rgba01_precision < 1:
+                raise ValueError(f"{Fore.RED}rgba01_precision must be a positive integer: {rgba01_precision}{Fore.RESET}")
+            Config.rgba01_precision = int(rgba01_precision)
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} rgba01_precision: {Fore.BLUE}{Config.rgba01_precision}")
         
+        if "replace_files" in config:
+            replace_files = config["replace_files"]
+            if not isinstance(replace_files, bool):
+                raise ValueError(f"{Fore.RED}replace_files must be a bool: {replace_files}{Fore.RESET}")
+            Config.replace_files = replace_files
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} replace_files: {Fore.BLUE}{Config.replace_files}")
+
+
         if "Values" in config:
             print(f"{Fore.GREEN}\nLoading Values")
             cfg_values = config["Values"]

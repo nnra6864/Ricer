@@ -1,5 +1,6 @@
 default_format = "{hex}"
 color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
+replace_files = true
 
 [Colors]
 background = "2e3440"
