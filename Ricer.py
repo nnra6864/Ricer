@@ -9,5 +9,5 @@ from Config import Config
 
 cfg_path = os.path.expanduser("~/.config/Ricer/Config.toml")
 Config.init(cfg_path)
-file = Config.files["Hyprland"]
-file.rice()
+for name, file in Config.files.items():
+    file.rice()

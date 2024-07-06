@@ -4,13 +4,15 @@ replace_files = true
 
 [Colors]
 background = "2e3440"
-Foreground = "#eceff4f0"
-01 = "rgb(0.132, .251332, 1, 0)"
+foreground = "#eceff4f0"
 
 [Values]
 test = 13.24
-test1 = "\nHAHAHAHA GG."
-two = 2
+test1 = "Test1"
+test2 = true
+easing = "Easing"
 
 [Files]
 Hyprland = ["~/.config/hypr/Hyprland.conf"]
+Hyprland2 = ["~/.config/hypr/Hyprland2.conf", "hexa"]
+Hyprland3 = ["~/.config/hypr/Hyprland3.conf", "rgba"]
