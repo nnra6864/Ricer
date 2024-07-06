@@ -18,6 +18,11 @@ class Config:
     colors = {}
     files = {}
 
+    color_formats = ("hex", "hexa", "hr", "hg", "hb", "ha",
+                     "rgb", "rgba", "r", "g", "b", "a",
+                     "rgb01", "rgba01", "r01", "g01", "b01", "a01",
+                     "format")
+
     @classmethod
     def init(cls, cfg_path):
         if cls._initialized:

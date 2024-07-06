@@ -3,12 +3,33 @@ import re
 class Color:
     def __init__(self, name, color):
         self.name = name
-        self.r, self.g, self.b, self.a = None, None, None, None
-        self.r01, self.g01, self.b01, self.a01 = None, None, None, None
-        self.rgba, self.rgba01 = None, None
-        self.hexa = None
+        self.r, self.g, self.b, self.a = 0, 0, 0, 0
+        self.r01, self.g01, self.b01, self.a01 = 0, 0, 0, 0
+        self.rgba, self.rgba01 = [], []
+        self.hexa = "", ""
         
         self.parse_color(color)
+
+        self.color_variables = {
+            'hex': self.hexa[:-2],
+            'hexa': self.hexa,
+            'hr': self.hexa[0:2],
+            'hg': self.hexa[2:4],
+            'hb': self.hexa[4:6],
+            'ha': self.hexa[6:8],
+            'rgb': self.rgba[:3],
+            'rgba': self.rgba,
+            'r': self.rgba[0],
+            'g': self.rgba[1],
+            'b': self.rgba[2],
+            'a': self.rgba[3],
+            'rgb01': self.rgba01[:3],
+            'rgba01': self.rgba01,
+            'r01': self.rgba01[0],
+            'g01': self.rgba01[1],
+            'b01': self.rgba01[2],
+            'a01': self.rgba01[3]
+        }
 
     @staticmethod
     def hexa_to_rgba(hexa):
@@ -61,4 +82,7 @@ class Color:
             self.hexa = Color.rgba_to_hexa(self.rgba)
             return
         raise ValueError(f"Invalid color format: {color} for {self.name}")
-
+    
+    def format_color(self, format: str) -> str:
+        pattern = re.compile(r'\b(' + '|'.join(re.escape(key) for key in self.color_variables.keys()) + r')\b')
+        return pattern.sub(lambda match: str(self.color_variables[match.group(1)]), format)
