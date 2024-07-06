@@ -1,5 +1,4 @@
 import re
-from Config import Config
 
 class Color:
     def __init__(self, name, color):
@@ -34,6 +33,7 @@ class Color:
         return f"{r:02X}{g:02X}{b:02X}{a:02X}"
 
     def parse_color(self, color):
+        from Config import Config
         color = color.strip().lstrip('#')
         if re.match(r'^([0-9a-fA-F]{6})$', color):
             color += "FF"
