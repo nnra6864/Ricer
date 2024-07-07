@@ -9,6 +9,7 @@ class Config:
     cfg_path = ""
     cfg_dir = ""
     files_path = ""
+    alias = "ricer"
     default_format = "hex"
     color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
     file_log_format = "Name: {name}\nPath: {path}\nTarget Path: {target_path}\nFormat: {format}\n"
@@ -36,6 +37,7 @@ class Config:
         Config.cfg_dir = os.path.dirname(cfg_path)
         Config.files_dir = Config.cfg_dir+"/Files/"
         
+        #TODO: Fix prints
         if not os.path.exists(Config.cfg_dir):
             Config.create_dir(Config.cfg_dir)
             print("")
@@ -74,20 +76,27 @@ class Config:
 
         with open(cfg_path, 'r') as cfg:
             config = toml.load(cfg)
+        
+        if "alias" in config:
+            alias = config["alias"]
+            if not isinstance(alias, str):
+                raise ValueError(f"{Fore.RED}alias must be a string: {alias}{Fore.RESET}")
+            Config.alias = alias
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} alias: {Fore.BLUE}{Config.alias}")
 
         if "default_format" in config:
             default_format = config["default_format"]
             if not isinstance(default_format, str):
                 raise ValueError(f"{Fore.RED}default_format must be a string: {default_format}{Fore.RESET}")
             Config.default_format = default_format
-            print(f"{Fore.GREEN}Loaded{Fore.RESET} default format: {Fore.BLUE}{cls.default_format}")
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} default format: {Fore.BLUE}{Config.default_format}")
     
         if "color_log_format" in config:
             color_log_format = config["color_log_format"]
             if not isinstance(color_log_format, str):
                 raise ValueError(f"{Fore.RED}color_log_format must be a string: {color_log_format}{Fore.RESET}")
             Config.color_log_format = color_log_format
-            print(f"{Fore.GREEN}Loaded{Fore.RESET} color_log_format: {Fore.BLUE}{cls.color_log_format}")
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} color_log_format: {Fore.BLUE}{Config.color_log_format}")
 
         if "file_log_format" in config:
             file_log_format = config["file_log_format"]

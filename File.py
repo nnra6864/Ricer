@@ -36,11 +36,13 @@ class File:
             target_file.write(self.rice_template())
 
     def rice_template(self) -> str:
+        from Config import Config
         with open(self.path, 'r') as template:
             print(f"Reading {Fore.BLUE}{self.path}")
             content = template.read()
-        ricer_col_pattern = re.compile(r'ricer\.col\.(\w+)(?:\.(\w+))?(?:\((.*?)\))?', re.DOTALL)
-        ricer_val_pattern = re.compile(r'ricer\.val\.(\w+)')
+        alias = Config.alias
+        ricer_val_pattern = re.compile(fr'{re.escape(alias)}\.val\.(\w+)')
+        ricer_col_pattern = re.compile(fr'{re.escape(alias)}\.col\.(\w+)(?:\.(\w+))?(?:\((.*?)\))?', re.DOTALL)
         return ricer_col_pattern.sub(self.get_color, ricer_val_pattern.sub(self.get_value, content))
     
     def get_value(self, match) -> str:
