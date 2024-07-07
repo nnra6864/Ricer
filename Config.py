@@ -33,7 +33,7 @@ class Config:
 
     @classmethod
     def load_config(cls, cfg_path):
-        Config.cfg_path = cfg_path
+        Config.cfg_path = os.path.expanduser(cfg_path)
         Config.cfg_dir = os.path.dirname(cfg_path)
         Config.files_dir = Config.cfg_dir+"/Files/"
         
