@@ -54,4 +54,4 @@ shadow = "2e34401a"
 shadow_inactive = "2e34401a"
 
 [Files]
-Hyprland = ["~/.config/hypr/Hyprland.conf", "hex"]
+Hyprland = ["~/.config/hypr/hyprland.conf", "hex"]
