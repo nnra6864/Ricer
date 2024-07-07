@@ -39,12 +39,14 @@ class Config:
         
         #TODO: Fix prints
         if not os.path.exists(Config.cfg_dir):
+            print(f"{Fore.YELLOW}Config dir doesn't exist")
             Config.create_dir(Config.cfg_dir)
-            print("")
+            print(f"{Fore.GREEN}Created the config dir: {Fore.BLUE}{Config.cfg_dir}")
 
         if not os.path.exists(Config.files_dir):
+            print(f"{Fore.YELLOW}Files dir doesn't exist")
             Config.create_dir(Config.files_dir)
-            print("")
+            print(f"{Fore.GREEN}Created the files dir: {Fore.BLUE}{Config.files_dir}")
 
         if not os.path.exists(cfg_path):
             print(f"{Fore.YELLOW}Config not found")
