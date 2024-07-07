@@ -37,7 +37,6 @@ class Config:
         Config.cfg_dir = os.path.dirname(cfg_path)
         Config.files_dir = Config.cfg_dir+"/Files/"
         
-        #TODO: Fix prints
         if not os.path.exists(Config.cfg_dir):
             print(f"{Fore.YELLOW}Config dir doesn't exist")
             Config.create_dir(Config.cfg_dir)
