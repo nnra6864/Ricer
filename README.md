@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://i.imgur.com/1RYLZhE.png" alt="Ricer">
+</p>
+
 # Table Of Contents
 - [Table Of Contents](#Table-Of-Contents)
 - [Ricer](#Ricer)
