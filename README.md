@@ -112,6 +112,7 @@ Excluding the extension is recommended only if there is a single file with that 
 **Templates** are copies of your config files containing certain keywords that Ricer looks for.
 All templates must be located in the `config_dir/Files/` directory and preferrably have different names *(for ease of use)*.
 When Ricer is started, it goes through all defined template files, copies their contents, replaces placeholders and copies the updated contents to their destination configs.
+[Example Template](https://github.com/nnra6864/Ricer/blob/master/Example)
 
 ### Keywords
 Ricer looks the alias, by default set to `ricer`, followed by the type - `val`/`col`, and a name, e.g. `background`.<br/>
