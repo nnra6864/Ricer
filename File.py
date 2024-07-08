@@ -2,11 +2,11 @@ import os, re
 from colorama import Fore
 
 class File:
-    def __init__(self, name, path, target_path, format):
+    def __init__(self, name, path, target_path, color_format):
         self.name = name
         self.path = path
         self.target_path = target_path
-        self.format = format
+        self.color_format = color_format
         self.dirname = os.path.dirname(self.path)
         self.target_dirname = os.path.dirname(self.target_path)
 
@@ -64,7 +64,7 @@ class File:
 
         col_format = match.group(2)
         if col_format is None:
-            col_format = self.format
+            col_format = self.color_format
         if not col_format in Config.color_formats:
             raise ValueError(
                 f"{Fore.BLUE}{col_format} {Fore.RED}is not a valid color format\n"

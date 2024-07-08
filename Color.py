@@ -65,7 +65,7 @@ class Color:
             self.rgba = (self.r, self.g, self.b, self.a)
             self.rgba01 = (self.r01, self.g01, self.b01, self.a01)
             return
-            
+        
         match = re.search(r'rgb\(\s*([\d\.]+(?:\s*,\s*[\d\.]+)*)\s*\)', color)
         if match:
             vals = re.findall(r'[\d\.]+', match.group(1))

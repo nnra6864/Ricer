@@ -8,13 +8,16 @@ class Config:
     _initialized = False
     cfg_path = ""
     cfg_dir = ""
-    files_path = ""
+    files_dir = ""
     alias = "ricer"
-    default_format = "hex"
+    default_color_format = "hex"
     color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
-    file_log_format = "Name: {name}\nPath: {path}\nTarget Path: {target_path}\nFormat: {format}\n"
+    file_log_format = "Name: {name}\nPath: {path}\nTarget Path: {target_path}\nFormat: {format}"
+    space_colors = False
+    space_files = True
     rgba01_precision = 2
     replace_files = False
+    create_example = True
     values = {}
     colors = {}
     files = {}
@@ -41,11 +44,13 @@ class Config:
             print(f"{Fore.YELLOW}Config dir doesn't exist")
             Config.create_dir(Config.cfg_dir)
             print(f"{Fore.GREEN}Created the config dir: {Fore.BLUE}{Config.cfg_dir}")
-
+        
+        had_files = True
         if not os.path.exists(Config.files_dir):
             print(f"{Fore.YELLOW}Files dir doesn't exist")
             Config.create_dir(Config.files_dir)
             print(f"{Fore.GREEN}Created the files dir: {Fore.BLUE}{Config.files_dir}")
+            had_files = False
 
         if not os.path.exists(cfg_path):
             print(f"{Fore.YELLOW}Config not found")
@@ -85,12 +90,12 @@ class Config:
             Config.alias = alias
             print(f"{Fore.GREEN}Loaded{Fore.RESET} alias: {Fore.BLUE}{Config.alias}")
 
-        if "default_format" in config:
-            default_format = config["default_format"]
-            if not isinstance(default_format, str):
-                raise ValueError(f"{Fore.RED}default_format must be a string: {default_format}{Fore.RESET}")
-            Config.default_format = default_format
-            print(f"{Fore.GREEN}Loaded{Fore.RESET} default format: {Fore.BLUE}{Config.default_format}")
+        if "default_color_format" in config:
+            default_color_format = config["default_color_format"]
+            if not isinstance(default_color_format, str):
+                raise ValueError(f"{Fore.RED}default_color_format must be a string: {default_color_format}{Fore.RESET}")
+            Config.default_color_format = default_color_format
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} default format: {Fore.BLUE}{Config.default_color_format}")
     
         if "color_log_format" in config:
             color_log_format = config["color_log_format"]
@@ -106,6 +111,20 @@ class Config:
             Config.file_log_format = file_log_format
             print(f"{Fore.GREEN}Loaded{Fore.RESET} file_log_format: {Fore.BLUE}{Config.file_log_format}")
 
+        if "space_colors" in config:
+            space_colors = config["space_colors"]
+            if not isinstance(space_colors, bool):
+                raise ValueError(f"{Fore.RED}space_colors must be a bool: {space_colors}{Fore.RESET}")
+            Config.space_colors = space_colors
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} space_colors: {Fore.BLUE}{Config.space_colors}")
+
+        if "space_files" in config:
+            space_files = config["space_files"]
+            if not isinstance(space_files, bool):
+                raise ValueError(f"{Fore.RED}space_files must be a bool: {space_files}{Fore.RESET}")
+            Config.space_files = space_files
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} space_files: {Fore.BLUE}{Config.space_files}")
+
         if "rgba01_precision" in config:
             rgba01_precision = config["rgba01_precision"]
             if not isinstance(rgba01_precision, int) and rgba01_precision < 1:
@@ -120,6 +139,20 @@ class Config:
             Config.replace_files = replace_files
             print(f"{Fore.GREEN}Loaded{Fore.RESET} replace_files: {Fore.BLUE}{Config.replace_files}")
 
+        if "create_example" in config:
+            create_example = config["create_example"]
+            if not isinstance(create_example, bool):
+                raise ValueError(f"{Fore.RED}create_example must be a bool: {create_example}{Fore.RESET}")
+            Config.create_example = create_example
+            print(f"{Fore.GREEN}Loaded{Fore.RESET} create_example: {Fore.BLUE}{Config.create_example}")
+        
+        if Config.create_example:
+            if not had_files:
+                example = os.path.join(os.path.dirname(__file__), "Example")
+                example_path = Config.files_dir + "Example"
+                shutil.copy(example, example_path)
+                print(f"{Fore.GREEN}Copied example from {Fore.BLUE}{example} {Fore.GREEN}to {Fore.BLUE}{example_path}")
+
 
         if "Values" in config:
             print(f"{Fore.GREEN}\nLoading Values")
@@ -133,12 +166,14 @@ class Config:
             cfg_colors = config["Colors"]
             for name, data in cfg_colors.items():
                 Config.colors[name] = (Config.load_color(name, data))
+                if Config.space_colors: print()
     
         if "Files" in config:
             print(f"{Fore.GREEN}\nLoading Files")
             cfg_files = config["Files"]
             for name, data in cfg_files.items():
                 Config.files[name] = (Config.load_file(name, data))
+                if Config.space_files: print()
     
     
     @staticmethod
@@ -176,7 +211,7 @@ class Config:
     def load_file(name: str, file_data: Union[str, List[str]]) -> File:
         path = f"{os.path.join(Config.files_dir, name)}*"
         target_path = ""
-        format = Config.default_format
+        format = Config.default_color_format
 
         if isinstance(file_data, str):
             target_path = os.path.expanduser(file_data)
@@ -208,7 +243,7 @@ class Config:
             name = f"{Fore.BLUE}{file.name}{Fore.RESET}",
             path = f"{Fore.BLUE}{file.path}{Fore.RESET}",
             target_path = f"{Fore.BLUE}{file.target_path}{Fore.RESET}",
-            format = f"{Fore.BLUE}{file.format}{Fore.RESET}"
+            format = f"{Fore.BLUE}{file.color_format}{Fore.RESET}"
         ))
         return file
 
