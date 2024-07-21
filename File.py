@@ -40,10 +40,14 @@ class File:
         with open(self.path, 'r') as template:
             print(f"Reading {Fore.BLUE}{self.path}")
             content = template.read()
+        
         alias = Config.alias
-        ricer_val_pattern = re.compile(fr'{re.escape(alias)}\.val\.(\w+)')
+        ricer_val_pattern = re.compile(fr'{re.escape(alias)}\.val\.(\w+)([\\ ]?)')
         ricer_col_pattern = re.compile(fr'{re.escape(alias)}\.col\.(\w+)(?:\.(\w+))?(?:\((.*?)\))?', re.DOTALL)
-        return ricer_col_pattern.sub(self.get_color, ricer_val_pattern.sub(self.get_value, content))
+        
+        content = ricer_val_pattern.sub(lambda match: self.get_value(match) + (match.group(2) if match.group(2) != '\\' else ''), content)
+        content = ricer_col_pattern.sub(self.get_color, content)
+        return content
     
     def get_value(self, match) -> str:
         from Config import Config

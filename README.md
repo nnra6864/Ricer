@@ -119,6 +119,7 @@ Ricer looks the alias, by default set to `ricer`, followed by the type - `val`/`
 Valid ways to access properties:
 - `ricer.val.bg` - retrieves a **value** from the [**[Values]**](#Values) table called **bg**.
 - `ricer.val.font_size` - retrieves a **value** from the [**[Values]**](#Values) table called **font_size**.
+- `ricer.val.rounding\px` - retrieves a **value** from the [**[Values]**](#Values) table called **rounding**, breaks at the **`\`**, and leaves **px** right next to the rounding value.
 - `ricer.col.text` - retrieves a **color** from the [**[Colors]**](#Colors) table called **text** in it's **default format**.
 - `ricer.col.outline.rgba01` - retrieves the **rgba01** value of a **color** from the [**[Colors]**](#Colors) table called **outline**.
 - `ricer.col.background.r` - retrieves the **red** channel of a **color** from the [**[Colors]**](#Colors) table called **background**.
