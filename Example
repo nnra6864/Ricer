@@ -8,3 +8,4 @@ My Outline Color: rgb(ricer.col.outline.rgba01)
 My Red Color: r = ricer.col.red.r
 My Blue Color: b = "ricer.col.blue.b01"
 My RGB A01 Color: rgba(ricer.col.shadow.format(r, g, b, a01))
+My HEX Color next to alpha: ricer.col.background.hex\50

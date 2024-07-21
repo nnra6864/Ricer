@@ -116,6 +116,7 @@ When Ricer is started, it goes through all defined template files, copies their 
 
 ### Keywords
 Ricer looks the alias, by default set to `ricer`, followed by the type - `val`/`col`, and a name, e.g. `background`.<br/>
+If you need to have characters right after a ricer variable, you can use the **`\`**. It isn't needed when using **`col.rgb()`** and **`col.format()`**.
 Valid ways to access properties:
 - `ricer.val.bg` - retrieves a **value** from the [**[Values]**](#Values) table called **bg**.
 - `ricer.val.font_size` - retrieves a **value** from the [**[Values]**](#Values) table called **font_size**.
