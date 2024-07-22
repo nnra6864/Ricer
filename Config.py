@@ -158,14 +158,15 @@ class Config:
             print(f"{Fore.GREEN}\nLoading Values")
             cfg_values = config["Values"]
             for name, data in cfg_values.items():
-                Config.values[name] = data
+                Config.values[name] = Config.resolve_reference(data, cfg_values)
                 print(f"{name}: {Fore.BLUE}{data}")
 
         if "Colors" in config:
             print(f"{Fore.GREEN}\nLoading Colors")
             cfg_colors = config["Colors"]
             for name, data in cfg_colors.items():
-                Config.colors[name] = (Config.load_color(name, data))
+                resolved_color = Config.resolve_reference(data, cfg_colors)
+                Config.colors[name] = (Config.load_color(name, str(resolved_color)))
                 if Config.space_colors: print()
     
         if "Files" in config:
@@ -246,4 +247,12 @@ class Config:
             format = f"{Fore.BLUE}{file.color_format}{Fore.RESET}"
         ))
         return file
+
+    @staticmethod
+    def resolve_reference(value, section):
+        if isinstance(value, str) and value.startswith('$'):
+            ref_key = value[1:]
+            if ref_key in section:
+                return section[ref_key]
+        return value
 
