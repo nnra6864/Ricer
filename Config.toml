@@ -2,21 +2,34 @@ alias = "ricer"
 default_color_format = "hex"
 rgba01_precision = 2
 replace_files = true
-create_example = true
+create_example = false
 color_log_format = "Name: {name} | HEXA: {hexa} | RGBA: {rgba} | RGBA01: {rgba01}"
 file_log_format = "Name: {name}\nPath: {path}\nTarget Path: {target_path}\nFormat: {format}"
 space_colors = false
 space_files = true
 
 [Values]
-bg = "Background.png"
+terminal = "alacritty"
+bg = "~/.config/Backgrounds/NordicRuinsInASnowyBlizzard.jpg"
 font = "Cascadia Code NF"
+min_font_size = 8
+small_font_size = 11
 font_size = 13
+big_font_size = 15
+max_font_size = 30
 icons = "Nordzy-dark"
 cursor = "Nordzy-cursors-white"
 cursor_size = 30
 outline_size = 2
-border_radius = 10
+rounding = 10
+gtk_theme = "Nordic-darker-v40"
+nvim_theme = "nord"
+notification_duration = 3
+
+hl_h = "h-10"
+hl_s = "s+25"
+hl_v = "v+25"
+hl_hsv = "h-10.s+25.v+25"
 
 [Colors]
 black = "2e3440"
@@ -37,24 +50,30 @@ br_magenta = "b48ead"
 br_cyan = "8fbcbb"
 br_white = "eceff4"
 
-text = "eceff4"
-text_link = "81a1c1"
-text_highlight = "88c0d0"
-text_inactive = "d8dee9"
-text_placeholder = "4c566a"
+text = "$br_white"
+text_highlight = "$br_blue"
+text_inactive = "$white"
+text_placeholder = "$white"
+link = "$cyan"
+link_visited = "$br_cyan"
 
-background = "2e3440"
-background_alt = "2e3440"
-background_inactive = "4c566a"
-background_inactive_alt = "4c566a"
+background = "$black"
+background_alt = "$br_black"
+background_highlight = "$br_black"
+background_highlight_alt = "$black"
+background_inactive = "$br_black"
+background_inactive_alt = "$black"
 
-outline = "eceff4"
-outline_alt = "81a1c1"
-outline_inactive = "2e3440"
-outline_inactive_alt = "4c566a"
+outline = "$br_blue"
+outline_alt = "$br_white"
+outline_inactive = "$white"
+outline_inactive_alt = "$black"
 
-shadow = "2e34401a"
-shadow_inactive = "2e34401a"
+shadow = "$black"
+shadow_inactive = "$black"
+
+button = "$br_black"
+button_inactive = "$black"
 
 [Files]
-Example = ["~/.config/Ricer/Example", "hex"]
+Example = "~/.config/Ricer/Example"

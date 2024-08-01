@@ -15,6 +15,7 @@
             - [Global](#Global)
             - [Values](#Values)
             - [Colors](#Colors)
+                - [Modifiers]($Modifiers)
             - [Files](#Files)
     - [Templates](#Templates)
         - [Keywords](#Keywords)
@@ -94,6 +95,31 @@ All the following color definitions are valid:
 
 *To use the RGBA01 range, channel value has to be a float(even if it's one), e.g. `1.0`*
 *If alpha channel isn't explicitly defined, it defaults to FF/255/1.0*
+
+##### [Modifiers]
+**Modifiers** are useful when dealing with colors.
+Ricer supports modifying HSL as of right now.
+It can be done in one of the following ways:
+- `col = "2e3440.h+25"` - Increases the hue by 25
+- `col = "2e3440.s-5"` - Decreases the saturation by 5
+- Increases the vibrancy of **`black`** by 25 when assigning to **`background`**
+```toml
+[Values]
+highligh_v = "v+25"
+
+[Colors]
+black = "2e3440"
+background = "$black.$highlight_v"
+```
+- Makes a value holding modifiers for highlight and uses it on **`black`** when assigning
+```toml
+[Values]
+hl_hsv = "h+0.s+10.v+25"
+
+[Colors]
+black = "2e3440"
+background = "$black.$highlight_v"
+```
 
 #### [Files]
 **Files** table is used to define templates used in the ricing, their corresponding configs, and optionally color formats.
