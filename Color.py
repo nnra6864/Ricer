@@ -75,47 +75,49 @@ class Color:
         self.r01, self.g01, self.b01, self.a01 = self.rgba01
     
         # Apply modifiers
-        h, s, v = rgb_to_hsv(self.r01, self.g01, self.b01)
-        
-        def apply_mod(mod):
-            nonlocal h, s, v
-            match = re.match(r'([hsvHSV])([+-]\d+)', mod)
-            if match:
-                component, value = match.groups()
-                value = int(value)
-                if component.lower() == 'h':
-                    h = (h + value / 360) % 1
-                elif component.lower() == 's':
-                    s = max(0, min(1, s + value / 100))
-                elif component.lower() == 'v':
-                    v = max(0, min(1, v + value / 100))
-            else:
-                raise ValueError(f"Invalid modifier format: {mod} for {self.name}")
+        # Apply modifiers
+        if modifiers:  # Only apply HSV modifications if there are modifiers
+            h, s, v = rgb_to_hsv(self.r01, self.g01, self.b01)
 
-        for mod in modifiers:
-            if mod.startswith('$'):
-                # Handle variable modifiers
-                var_key = mod[1:]
-                if var_key in Config.values:
-                    var_value = Config.values[var_key]
-                    # Check if the variable contains multiple modifiers
-                    if '.' in var_value:
-                        for sub_mod in var_value.split('.'):
-                            apply_mod(sub_mod)
-                    else:
-                        apply_mod(var_value)
+            def apply_mod(mod):
+                nonlocal h, s, v
+                match = re.match(r'([hsvHSV])([+-]\d+)', mod)
+                if match:
+                    component, value = match.groups()
+                    value = int(value)
+                    if component.lower() == 'h':
+                        h = (h + value / 360) % 1
+                    elif component.lower() == 's':
+                        s = max(0, min(1, s + value / 100))
+                    elif component.lower() == 'v':
+                        v = max(0, min(1, v + value / 100))
                 else:
-                    raise ValueError(f"Undefined value variable: {mod} for {self.name}")
-            else:
-                apply_mod(mod)
+                    raise ValueError(f"Invalid modifier format: {mod} for {self.name}")
 
-        # Convert back to RGB
-        r, g, b = hsv_to_rgb(h, s, v)
-        self.r01, self.g01, self.b01 = r, g, b
-        self.r, self.g, self.b = int(r * 255), int(g * 255), int(b * 255)
-        self.rgba = (self.r, self.g, self.b, self.a)
-        self.rgba01 = (self.r01, self.g01, self.b01, self.a01)
-        self.hexa = Color.rgba_to_hexa(self.rgba)
+            for mod in modifiers:
+                if mod.startswith('$'):
+                    # Handle variable modifiers
+                    var_key = mod[1:]
+                    if var_key in Config.values:
+                        var_value = Config.values[var_key]
+                        # Check if the variable contains multiple modifiers
+                        if '.' in var_value:
+                            for sub_mod in var_value.split('.'):
+                                apply_mod(sub_mod)
+                        else:
+                            apply_mod(var_value)
+                    else:
+                        raise ValueError(f"Undefined value variable: {mod} for {self.name}")
+                else:
+                    apply_mod(mod)
+
+            # Convert back to RGB
+            r, g, b = hsv_to_rgb(h, s, v)
+            self.r01, self.g01, self.b01 = r, g, b
+            self.r, self.g, self.b = int(r * 255), int(g * 255), int(b * 255)
+            self.rgba = (self.r, self.g, self.b, self.a)
+            self.rgba01 = (self.r01, self.g01, self.b01, self.a01)
+            self.hexa = Color.rgba_to_hexa(self.rgba)
 
         self.update_color_variables()
 
