@@ -37,7 +37,7 @@ class Color:
         from Config import Config
         
         # Split the color string into base color and modifiers
-        parts = color.split('.')
+        parts = re.split(r'\.(?![^()]*\))', color)
         base_color = parts[0]
         modifiers = parts[1:]
     
